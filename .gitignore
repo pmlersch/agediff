@@ -1,0 +1,23 @@
+# Claude Code worktrees and workspace files
+.claude/worktrees/
+.claude/settings.local.json
+
+# Stata dataset and output files
+*.dta
+*.gph
+*.smcl
+*.stpr
+*.stsem
+
+# large data files (also covered by wildcards below)
+ess.dta
+ess.csv
+
+# R data files
+*.rds
+*.Rdata
+*.RData
+*.RdataTmp*
+
+# other data
+*.csv

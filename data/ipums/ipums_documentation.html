@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IPUMS Documentation — Age-Difference Project</title>
+  <style>
+    :root {
+      --bg: #fafafa;
+      --card: #ffffff;
+      --border: #e0e0e0;
+      --accent: #1a6b8a;
+      --accent-light: #e8f4f8;
+      --text: #2c2c2c;
+      --muted: #666;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+    h1 {
+      font-size: 1.6rem;
+      margin-bottom: 0.3rem;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+    }
+    h2 {
+      font-size: 1.15rem;
+      margin: 2rem 0 0.8rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 2px solid var(--accent);
+      color: var(--accent);
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.9rem 1.1rem;
+      margin-bottom: 0.6rem;
+    }
+    .card a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    .card a:hover { text-decoration: underline; }
+    .card p {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 0.2rem;
+    }
+    .tag {
+      display: inline-block;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.15rem 0.45rem;
+      border-radius: 3px;
+      margin-left: 0.4rem;
+      vertical-align: middle;
+    }
+    .citation {
+      background: var(--accent-light);
+      border-left: 3px solid var(--accent);
+      padding: 0.8rem 1rem;
+      font-size: 0.85rem;
+      margin-top: 1.5rem;
+      border-radius: 0 4px 4px 0;
+    }
+    .citation code {
+      display: block;
+      margin-top: 0.4rem;
+      font-size: 0.8rem;
+      word-break: break-all;
+    }
+    footer {
+      margin-top: 2.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+
+<h1>IPUMS Documentation Links</h1>
+<p class="subtitle">Reference page for the age-difference project — IPUMS International V7.6</p>
+
+<!-- ====== MAIN PORTAL ====== -->
+<h2>Main Portal</h2>
+
+<div class="card">
+  <a href="https://international.ipums.org/international/">IPUMS International — Home</a>
+  <p>Entry point for browsing samples, variables, and documentation for census microdata worldwide.</p>
+</div>
+
+<div class="card">
+  <a href="https://international.ipums.org/international/about.shtml">About IPUMS International</a>
+  <p>Project overview, scope (120+ countries, 500+ censuses), and methodology for harmonisation.</p>
+</div>
+
+<div class="card">
+  <a href="https://international.ipums.org/international/citation.shtml">Terms of Use &amp; Citation</a>
+  <p>Required citation format and conditions for using IPUMS International data.</p>
+</div>
+
+<!-- ====== VARIABLES USED ====== -->
+<h2>Variables Used in This Project</h2>
+
+<div class="card">
+  <a href="https://international.ipums.org/international-action/variables/AGE">AGE</a>
+  <span class="tag">person</span>
+  <p>Age of respondent. Integer years; top-coded at varying thresholds by sample. Missing = 999.</p>
+</div>
+
+<div class="card">
+  <a href="https://international.ipums.org/international-action/variables/AGE2">AGE2 (Age of spouse/partner)</a>
+  <span class="tag">constructed</span>
+  <p>Age of the respondent's spouse or partner, linked via SPLOC. Used as <code>age_sp</code> in our data.</p>
+</div>
+
+<div class="card">
+  <a href="https://international.ipums.org/international-action/variables/SEX">SEX</a>
+  <span class="tag">person</span>
+  <p>Biological sex of respondent. Codes: 1 = Male, 2 = Female. Used to orient the age difference (husband − wife).</p>
+</div>
+
+<div class="card">
+  <a href="https://international.ipums.org/international-action/variables/MARST">MARST</a>
+  <span class="tag">person</span>
+  <p>Marital status. Key categories: married/spouse present, married/spouse absent, separated, divorced, widowed. We restrict to married with spouse present.</p>
+</div>
+
+<div class="card">
+  <a href="https://international.ipums.org/international-action/variables/SPLOC">SPLOC</a>
+  <span class="tag">constructed</span>
+  <p>Spouse's location (person number within the household). The pointer variable that links respondents to their partners, enabling construction of AGE2.</p>
+</div>
+
+<div class="card">
+  <a href="https://international.ipums.org/international-action/variables/RELATE">RELATE</a>
+  <span class="tag">person</span>
+  <p>Relationship to household head. Used in constructing couple links and identifying spouse/partner pairs.</p>
+</div>
+
+<div class="card">
+  <a href="https://international.ipums.org/international-action/variables/YEAR">YEAR</a>
+  <span class="tag">technical</span>
+  <p>Year of the census or survey. Our data spans 2005–2014. Combined with AGE to derive birth cohort.</p>
+</div>
+
+<div class="card">
+  <a href="https://international.ipums.org/international-action/variables/COUNTRY">COUNTRY</a>
+  <span class="tag">technical</span>
+  <p>Country of census. Numeric codes based on ISO 3166. Our study uses 40 countries across all world regions.</p>
+</div>
+
+<div class="card">
+  <a href="https://international.ipums.org/international-action/variables/PERWT">PERWT</a>
+  <span class="tag">technical</span>
+  <p>Person-level sampling weight. Indicates how many persons in the population each sample observation represents.</p>
+</div>
+
+<!-- ====== SAMPLE & METHODOLOGY ====== -->
+<h2>Samples &amp; Methodology</h2>
+
+<div class="card">
+  <a href="https://international.ipums.org/international/sample_designs.shtml">Sample Designs</a>
+  <p>Documentation of sampling methodology for each country-year combination, including density and design.</p>
+</div>
+
+<div class="card">
+  <a href="https://international.ipums.org/international/source_details.shtml">Source Data Details</a>
+  <p>Original data sources (censuses, registers, surveys) by country and year, with links to national statistical offices.</p>
+</div>
+
+<div class="card">
+  <a href="https://international.ipums.org/international/geography.shtml">Geography &amp; Country Coverage</a>
+  <p>Map and list of available countries, census years, and geographic detail levels.</p>
+</div>
+
+<div class="card">
+  <a href="https://international.ipums.org/international/variables_harmonized.shtml">Harmonisation Notes</a>
+  <p>How IPUMS standardises variables across countries with different coding schemes, categories, and definitions.</p>
+</div>
+
+<div class="card">
+  <a href="https://international.ipums.org/international/family_linking.shtml">Family Interrelationship Variables</a>
+  <p>Documentation on how IPUMS constructs spouse/partner links (SPLOC, SPRULE) from household rosters — critical for our couple-level analysis.</p>
+</div>
+
+<!-- ====== USER GUIDES ====== -->
+<h2>User Guides &amp; Tutorials</h2>
+
+<div class="card">
+  <a href="https://www.ipums.org/support/tutorials">IPUMS Tutorials</a>
+  <p>Video and written guides for extracting data, using the online analysis system, and working with microdata.</p>
+</div>
+
+<div class="card">
+  <a href="https://international.ipums.org/international/using_the_data.shtml">Using the Data</a>
+  <p>Practical guidance on working with IPUMS International extracts: file formats, statistical software, and weighting.</p>
+</div>
+
+<div class="card">
+  <a href="https://forum.ipums.org/">IPUMS User Forum</a>
+  <p>Community Q&amp;A for data users. Searchable archive of common questions about variables, samples, and methodology.</p>
+</div>
+
+<!-- ====== CITATION ====== -->
+<div class="citation">
+    <strong>Required citation for this project:</strong>
+    <code>Ruggles, S., Cleveland, L. L., Lovatón Dávila, R., Sarkar, S., Sobek, M., et al. (2025). Integrated Public Use Microdata Series, International: Version 7.6 [dataset]. Minneapolis, MN: IPUMS. https://doi.org/10.18128/D020.V7.6</code>
+</div>
+
+<footer>
+  Generated for the age-difference project (<code>agediff</code>). All links point to official IPUMS documentation at ipums.org.
+</footer>
+
+</body>
+</html>

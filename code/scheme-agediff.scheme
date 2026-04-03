@@ -1,0 +1,58 @@
+* =============================================================================
+* scheme-agediff.scheme
+*
+* A clean, minimal Stata graph scheme for the agediff project.
+* Builds on the built-in s1color scheme and overrides key settings
+* to produce publication-ready, ggplot2 theme_minimal-inspired figures:
+*
+*   • White backgrounds throughout
+*   • No outer plot-region border
+*   • Subtle horizontal-only grid lines (light grey, very thin)
+*   • Thin, clean axis lines and ticks
+*   • Compact, readable legend
+*
+* Usage (add once at the top of any do-file that produces graphs):
+*     set scheme agediff
+*
+* Stata looks for scheme-<name>.scheme in the working directory and the
+* ado path; place this file in the project root (alongside main.do).
+* =============================================================================
+
+#include s1color
+
+* ---------------------------------------------------------------------------
+* Backgrounds — force white everywhere
+* ---------------------------------------------------------------------------
+color background          white
+color plotregion          white
+color matrix_plotregion   white
+color legend              white
+
+* ---------------------------------------------------------------------------
+* Plot-region outer border — remove for a cleaner look
+* ---------------------------------------------------------------------------
+yesno draw_plotregion_border  no
+
+* ---------------------------------------------------------------------------
+* Grid lines — horizontal only, very light grey
+* Vertical grid lines add visual clutter; horizontal lines aid reading values
+* ---------------------------------------------------------------------------
+yesno draw_major_hgrid    yes
+yesno draw_major_vgrid    no
+yesno draw_minor_hgrid    no
+yesno draw_minor_vgrid    no
+color major_grid          "220 220 220"
+linewidth major_grid      vthin
+
+* ---------------------------------------------------------------------------
+* Axis lines and tick marks — keep thin and unobtrusive
+* ---------------------------------------------------------------------------
+linewidth axisline        thin
+linewidth tick            thin
+linewidth minortick       vthin
+
+* ---------------------------------------------------------------------------
+* Legend — no box border, compact
+* ---------------------------------------------------------------------------
+yesno legend_force_keysym  no
+color legend_line          white
