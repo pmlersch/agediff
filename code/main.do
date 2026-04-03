@@ -63,3 +63,12 @@ rcall: source("code/multivariate_basic.R")
 * -----------------------------------------------------------------------------
 rcall: source("code/multivariate_advanced.R")
 
+* -----------------------------------------------------------------------------
+* 4. Robustness checks
+* -----------------------------------------------------------------------------
+
+* 4a. Source-specific estimates: run key models separately for DHS, ESS,
+*     ISSP, and IPUMS to assess whether the main findings (declining mean,
+*     rising SD over cohorts) are driven by a single data source.
+rcall: source("code/check_source_specific.R")
+
