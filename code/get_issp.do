@@ -1,7 +1,7 @@
 * get_issp.do
-* harmonize international social survey programme (issp) data.
-
-
+* Harmonize International Social Survey Programme (ISSP) data.
+* Input:  data/issp/za5900_v4-0-0.dta
+* Output: data/harmonized/issp_harmonized.dta
 
 do "code/check_harmonized.do"
 
@@ -18,7 +18,7 @@ foreach v in v4 {
     if !_rc & "`country_var'" == "" local country_var `v'
 }
 if "`country_var'" == "" {
-    di "[issp] cannot find country variable."
+    di "[ISSP] Cannot find country variable."
     exit 1
 }
 
@@ -51,21 +51,21 @@ if "`partner_age_var'" != "" {
     destring `partner_age_var', replace
     replace age_partner = `partner_age_var'
     replace age_partner = . if inlist(age_partner, 0, 998 , 999) | age_partner < 15
-    di "[issp] partner age variable: `partner_age_var'"
+    di "[ISSP] Partner age variable: `partner_age_var'"
 }
 
 replace age_partner = . if age_partner > 120
 
-else di "[issp] no partner age variable found — set to missing."
+else di "[ISSP] No partner age variable found — set to missing."
 
 * partner sex
-gen sex_partner = sex * -1 + 3 //sex of partner not surveyed, I assume opposite-sex partnerships
+gen sex_partner = sex * -1 + 3 // sex of partner not surveyed; assume opposite-sex partnerships
 
 * marital status
 destring marital, replace
 gen marital_status = ""
 replace marital_status = "married"          if marital == 1
-replace marital_status = "never_married" if marital == 2 //civil partnership as never married
+replace marital_status = "never_married" if marital == 2 // civil partnership as never married
 replace marital_status = "separated"        if marital == 3
 replace marital_status = "divorced"         if marital == 4
 replace marital_status = "widowed"          if marital == 5
@@ -96,8 +96,8 @@ keep year sex sex_partner birth_cohort marital_status age age_partner ///
      country_iso country_name weight source
 drop if missing(age_partner)
 
-di "[issp] harmonized " _n " records."
+di "[ISSP] Harmonized " _N " records."
 run_dq_checks "issp"
-di "[issp] saving to `path_out'"
+di "[ISSP] Saving to `path_out'"
 save "`path_out'", replace
-di "[issp] done."
+di "[ISSP] Done."
