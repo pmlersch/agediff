@@ -231,6 +231,91 @@ ggsave("results/fig13b_country_sd_trends.emf", fig13b, width = 10, height = 6, d
 ggsave("results/fig13b_country_sd_trends.png", fig13b, width = 10, height = 6, dpi = 300)
 cat("Saved: results/fig13b_country_sd_trends\n")
 
+# ---- Figure 14: Country × cohort variance decomposition (Model 5) -----------
+# Model 5 (crossed varIdent) estimates a separate residual SD for every
+# country × cohort cell.  A heatmap of these cell-specific SDs is the most
+# direct visualisation of the paper's central claim: if normativity is
+# converging UNIFORMLY, the SD should decline similarly in every row of the
+# heatmap.  Country-specific patterns — steeper or shallower slopes, or even
+# increases — reveal heterogeneous trajectories.
+
+# Base sigma from M5 (reference cell, ratio = 1)
+base_sigma_crossed <- m5_var_crossed$sigma
+
+# Extract variance weights for all non-reference cells
+var_weights_crossed <- coef(
+  m5_var_crossed$modelStruct$varStruct,
+  unconstrained = FALSE
+)
+
+# All cells present in the model
+all_cells <- levels(df_model$country_cohort_f)
+
+# Build a full named weight vector; reference cell weight is 1
+all_wt_crossed <- setNames(rep(1, length(all_cells)), all_cells)
+all_wt_crossed[names(var_weights_crossed)] <- as.numeric(var_weights_crossed)
+
+# Compute estimated residual SD per cell: base_sigma × weight
+cell_sd_df <- data.frame(
+  cell     = all_cells,
+  resid_sd = base_sigma_crossed * all_wt_crossed
+)
+
+# Parse country and cohort from the combined "__"-separated label
+cell_sd_df$country <- sub("__.*", "", cell_sd_df$cell)
+cell_sd_df$cohort  <- sub(".*__", "", cell_sd_df$cell)
+
+# Order cohort levels chronologically (same order as the model factors)
+cell_sd_df$cohort <- factor(cell_sd_df$cohort, levels = levels(df_model$cohort_f))
+
+# Sort countries by their mean estimated SD (descending) so high-SD countries
+# appear at the top of the heatmap for easy comparison
+country_avg_sd <- tapply(cell_sd_df$resid_sd, cell_sd_df$country, mean)
+country_order  <- names(sort(country_avg_sd, decreasing = TRUE))
+cell_sd_df$country <- factor(cell_sd_df$country, levels = country_order)
+
+cat("\n===== Estimated residual SD per country \u00d7 cohort cell (Model 5) =====\n")
+print(kable(
+  cell_sd_df[order(cell_sd_df$country, cell_sd_df$cohort),
+             c("country", "cohort", "resid_sd")],
+  format  = "simple",
+  digits  = 3,
+  row.names = FALSE
+))
+
+fig14 <- ggplot(cell_sd_df, aes(
+  x    = cohort,                                    # cohort on x-axis
+  y    = country,                                   # country on y-axis (sorted by mean SD)
+  fill = resid_sd                                   # estimated SD determines colour
+)) +
+  geom_tile(color = "white", linewidth = 0.2) +     # heatmap tiles with white grid
+  scale_fill_viridis_c(
+    option    = "magma",
+    name      = "Residual SD\n(years)",
+    direction = -1                                  # dark = low SD, bright = high SD
+  ) +
+  labs(
+    x     = "Birth cohort",
+    y     = NULL,
+    title = "Figure 14: Country \u00d7 cohort variance decomposition (Model 5)",
+    subtitle = paste0(
+      "Estimated residual SD per cell from crossed varIdent model.\n",
+      "Uniform decline across rows \u21d2 convergence is global; ",
+      "heterogeneous rows \u21d2 country-specific trajectories."
+    )
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    axis.text.y = element_text(size = 6)
+  )
+
+ggsave("results/fig14_country_cohort_variance.pdf", fig14, width = 10, height = 16)
+ggsave("results/fig14_country_cohort_variance.emf", fig14, width = 10, height = 16,
+       device = devEMF::emf)
+ggsave("results/fig14_country_cohort_variance.png", fig14, width = 10, height = 16,
+       dpi = 300)
+cat("Saved: results/fig14_country_cohort_variance\n")
+
 
 # =============================================================================
 # 7. MODEL DIAGNOSTICS
@@ -616,6 +701,7 @@ cat("  fig11_country_mu_re.{pdf,emf,png}          — Country mean deviations\n"
 cat("  fig12_mean_vs_variance_re.{pdf,emf,png}    — Mean vs variance relationship\n")
 cat("  fig13_country_density_evolution.{pdf,emf,png} — Full density evolution, 8 countries\n")
 cat("  fig13b_country_sd_trends.{pdf,emf,png}     — SD trends for 8 countries\n")
+cat("  fig14_country_cohort_variance.{pdf,emf,png} — KEY: country × cohort SD heatmap (M5)\n")
 cat("\n")
 cat("Diagnostics saved to results/:\n")
 cat("  figD1_resid_vs_fitted_m2.{pdf,emf,png} — Residuals vs fitted (M2)\n")
@@ -633,4 +719,5 @@ cat("  M1: Homoskedastic random-intercept (baseline)\n")
 cat("  M2: Heteroskedastic by cohort (varIdent on cohort)\n")
 cat("  M3: Heteroskedastic by country (varIdent on country)\n")
 cat("  M4: Random slope + heteroskedastic by cohort\n")
+cat("  M5: Crossed varIdent (country \u00d7 cohort) — variance decomposition\n")
 cat("=====================================================\n")

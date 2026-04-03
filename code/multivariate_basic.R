@@ -48,11 +48,12 @@ library(patchwork)    # provides plot_layout() and plot_annotation() for multi-p
 # This lets us formally test: does the VARIANCE of the age gap differ
 # across cohorts? Across countries? Both?
 #
-# We estimate three models of increasing complexity:
+# We estimate five models of increasing complexity:
 #   M1: Homoskedastic baseline (equal variance everywhere)
 #   M2: Variance differs by cohort (varIdent on cohort_group)
 #   M3: Variance differs by country (varIdent on country)
-#   M4: Full model — random intercept + variance by cohort AND country
+#   M4: Random slope on cohort — country-specific cohort trends in the mean
+#   M5: Crossed varIdent — separate variance per country × cohort cell
 # We compare them via likelihood ratio tests and AIC.
 
 # Convert grouping variables to factors (lme/nlme requires this)
@@ -139,10 +140,10 @@ print(summary(m3_var_country))
 # --------------------------------------------------------------------------
 # Model 4: Random slope — does the cohort trend vary across countries?
 # --------------------------------------------------------------------------
-# Instead of estimating a separate SD for every country × cohort cell
-# (~280 parameters, very slow), we add a random slope on a numeric cohort
-# index. This lets each country have its own cohort TREND in the mean,
-# testing whether convergence toward smaller age gaps is uniform.
+# We add a random slope on a numeric cohort index so that each country can
+# have its own cohort TREND in the MEAN, testing whether convergence toward
+# smaller age gaps is uniform.  Note: this captures country heterogeneity in
+# the mean trajectory, not in the variance — the latter is addressed by M5.
 cat("\nFitting Model 4: Random slope on cohort index...\n")
 
 # Create a numeric cohort index (1, 2, 3, …) so we can fit a random slope
@@ -161,6 +162,39 @@ cat("\n===== Model 4: Random slope + variance by cohort =====\n")
 print(summary(m4_rs))
 
 # --------------------------------------------------------------------------
+# Model 5: Crossed varIdent — variance by country × cohort jointly
+# --------------------------------------------------------------------------
+# Models M2 and M3 test variance by cohort and by country separately, but the
+# paper's central claim is that NORMATIVITY shifts DIFFERENTLY across countries
+# over time — i.e., there is a country × cohort interaction in the VARIANCE.
+# A crossed varIdent estimates a separate residual SD for each country × cohort
+# cell, directly quantifying this interaction.
+#
+# M2 is nested in M5 (all cells in the same cohort constrained to equal SD).
+# M3 is nested in M5 (all cells in the same country constrained to equal SD).
+# Comparing M5 to M2 and M3 via LRT therefore tests whether the cohort variance
+# trajectory genuinely differs across countries.
+cat("\nFitting Model 5: Crossed varIdent by country \u00d7 cohort...\n")
+
+# Create the crossed grouping variable: one level per country × cohort cell.
+# The "__" separator avoids ambiguity with country names that contain spaces.
+df_model$country_cohort_f <- factor(
+  paste(df_model$country_f, df_model$cohort_f, sep = "__")
+)
+
+m5_var_crossed <- lme(
+  fixed   = age_diff ~ cohort_f,                    # same fixed effects as M1–M4
+  random  = ~ 1 | country_f,                        # random intercept per country
+  weights = varIdent(form = ~ 1 | country_cohort_f), # separate SD per cell
+  data    = df_model,
+  method  = "REML",
+  control = lmeControl(opt = "optim", maxIter = 200, msMaxIter = 200)
+)
+
+cat("\n===== Model 5: Crossed varIdent (country \u00d7 cohort) =====\n")
+print(summary(m5_var_crossed))
+
+# --------------------------------------------------------------------------
 # Model comparison via likelihood ratio tests and AIC
 # --------------------------------------------------------------------------
 # The anova() function for lme objects performs a likelihood ratio test (LRT).
@@ -172,25 +206,34 @@ print(anova(m1_homo, m2_var_cohort))               # does variance differ by coh
 cat("\n===== Likelihood ratio test: M1 (homo) vs M3 (country variance) =====\n")
 print(anova(m1_homo, m3_var_country))              # does variance differ by country?
 
+cat("\n===== Likelihood ratio test: M2 (cohort) vs M5 (crossed) =====\n")
+print(anova(m2_var_cohort, m5_var_crossed))        # does variance vary by COUNTRY within cohort?
+
+cat("\n===== Likelihood ratio test: M3 (country) vs M5 (crossed) =====\n")
+print(anova(m3_var_country, m5_var_crossed))       # does variance vary by COHORT within country?
+
 # Build a compact AIC comparison table
 aic_table <- data.frame(
   Model = c(
     "M1: Homoskedastic (equal variance)",
     "M2: Variance by cohort",
     "M3: Variance by country",
-    "M4: Random slope + variance by cohort"
+    "M4: Random slope + variance by cohort",
+    "M5: Crossed variance (country \u00d7 cohort)"
   ),
   AIC = round(c(
     AIC(m1_homo),
     AIC(m2_var_cohort),
     AIC(m3_var_country),
-    AIC(m4_rs)
+    AIC(m4_rs),
+    AIC(m5_var_crossed)
   ), 1),
   BIC = round(c(
     BIC(m1_homo),
     BIC(m2_var_cohort),
     BIC(m3_var_country),
-    BIC(m4_rs)
+    BIC(m4_rs),
+    BIC(m5_var_crossed)
   ), 1)
 )
 
