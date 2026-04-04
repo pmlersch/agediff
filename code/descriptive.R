@@ -6,13 +6,13 @@
 ## Structure:
 ##   1. Setup & data loading
 ##   2. Variable construction
-##   3. Descriptive figures — ridgeline plots (Figures 3 and 3b)
-##   4. Figure 4b: Variance decomposition over cohorts
-##   5. Figure 5: Heatmap of SD by country × cohort
+##   3. Descriptive figures — ridgeline plots (Figures 3 and 4)
+##   4. Figure 6: Variance decomposition over cohorts
+##   5. Figure 7: Heatmap of SD by country × cohort
 ##
-## Tables 1–5 and Figures 1, 2, 3c, 4, 6 are produced by the Stata
-## script code/descriptive.do, which can do these equally well.
-## Ridgeline figures (3, 3b) and Figures 4b and 5 are produced here.
+## Tables 1–5 and Figures 1, 2, 5, 9, 10 are produced by the Stata
+## script code/descriptive.do.
+## Ridgeline figures (3, 4) and Figures 6, 7, 8 are produced here.
 ##
 ## Input  : data/harmonized/harmonized.rds  (from merge_data.R)
 ##
@@ -76,9 +76,9 @@ cat("Sources:", paste(sort(unique(df$source)), collapse = ", "), "\n")
 # =============================================================================
 # 3. DESCRIPTIVE FIGURES — RIDGELINE PLOTS
 #
-# Ridgeline density plots (Figures 3 and 3b) are produced here because they
+# Ridgeline density plots (Figures 3 and 4) are produced here because they
 # rely on the ggridges package which has no equivalent in Stata.
-# Tables 1–5 and Figures 1, 2, 3c, 4, 6 are produced by the Stata
+# Tables 1–5 and Figures 1, 2, 5, 9, 10 are produced by the Stata
 # script code/descriptive.do.
 # =============================================================================
 
@@ -122,11 +122,11 @@ ggsave("results/fig3_ridgeline.pdf", fig3, width = 8, height = 12)
 ggsave("results/fig3_ridgeline.emf", fig3, width = 8, height = 12, device = devEMF::emf)
 cat("Saved: results/fig3_ridgeline\n")
 
-# ---- Figure 3b: Ridgeline density by BIRTH COHORT ---------------------------
+# ---- Figure 4: Ridgeline density by BIRTH COHORT ----------------------------
 # This figure asks: how has the shape of the age-gap distribution changed
 # across generations? Each ridge represents one 10-year cohort.
 
-fig3b <- ggplot(df, aes(
+fig4 <- ggplot(df, aes(
   x    = age_diff,
   y    = cohort_group,                              # one ridge per birth cohort
   fill = after_stat(x)
@@ -139,16 +139,16 @@ fig3b <- ggplot(df, aes(
   labs(
     x     = "Age difference (husband \u2212 wife, years)",
     y     = "Birth cohort",
-    title = "Figure 3b: Age-gap distributions by birth cohort"
+    title = "Figure 4: Age-gap distributions by birth cohort"
   )
 
-ggsave("results/fig3b_ridgeline_cohort.pdf", fig3b, width = 8, height = 8)
-ggsave("results/fig3b_ridgeline_cohort.emf", fig3b, width = 8, height = 8, device = devEMF::emf)
-cat("Saved: results/fig3b_ridgeline_cohort\n")
+ggsave("results/fig4_ridgeline_cohort.pdf", fig4, width = 8, height = 8)
+ggsave("results/fig4_ridgeline_cohort.emf", fig4, width = 8, height = 8, device = devEMF::emf)
+cat("Saved: results/fig4_ridgeline_cohort\n")
 
 
 # =============================================================================
-# 4. FIGURE 4b: VARIANCE DECOMPOSITION OVER COHORTS
+# 4. FIGURE 6: VARIANCE DECOMPOSITION OVER COHORTS
 #
 # Decomposes total variance of age_diff into:
 #   Between-country variance = var(country means)        per cohort
@@ -196,7 +196,7 @@ coh_long[, component := factor(
   labels = c("Within-country", "Between-country")
 )]
 
-p4b_a <- ggplot(coh_long, aes(x = cohort_group, y = variance, fill = component)) +
+p6a <- ggplot(coh_long, aes(x = cohort_group, y = variance, fill = component)) +
   geom_col() +
   scale_fill_manual(
     values = c("Within-country" = "#1f4e79", "Between-country" = "#8b0000"),
@@ -206,7 +206,7 @@ p4b_a <- ggplot(coh_long, aes(x = cohort_group, y = variance, fill = component))
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "top")
 
 # Panel B: ICC
-p4b_b <- ggplot(coh_var, aes(x = cohort_start, y = icc)) +
+p6b <- ggplot(coh_var, aes(x = cohort_start, y = icc)) +
   geom_line(color = "orange") +
   geom_point(color = "orange", size = 2) +
   scale_x_continuous(breaks = seq(1920, 1990, 10)) +
@@ -218,7 +218,7 @@ p4b_b <- ggplot(coh_var, aes(x = cohort_start, y = icc)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 # Panel C: between-country SD
-p4b_c <- ggplot(coh_var, aes(x = cohort_start, y = between_sd_p)) +
+p6c <- ggplot(coh_var, aes(x = cohort_start, y = between_sd_p)) +
   geom_line(color = "firebrick") +
   geom_point(color = "firebrick", size = 2) +
   scale_x_continuous(breaks = seq(1920, 1990, 10)) +
@@ -229,7 +229,7 @@ p4b_c <- ggplot(coh_var, aes(x = cohort_start, y = between_sd_p)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 # Panel D: within-country SD
-p4b_d <- ggplot(coh_var, aes(x = cohort_start, y = within_sd_p)) +
+p6d <- ggplot(coh_var, aes(x = cohort_start, y = within_sd_p)) +
   geom_line(color = "navy") +
   geom_point(color = "navy", size = 2) +
   scale_x_continuous(breaks = seq(1920, 1990, 10)) +
@@ -239,19 +239,19 @@ p4b_d <- ggplot(coh_var, aes(x = cohort_start, y = within_sd_p)) +
   ) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-fig4b <- (p4b_a | p4b_b) / (p4b_c | p4b_d) +
+fig6 <- (p6a | p6b) / (p6c | p6d) +
   plot_annotation(
-    title   = "Figure 4b: Variance decomposition of age gap across birth cohorts",
+    title   = "Figure 6: Variance decomposition of age gap across birth cohorts",
     caption = "Decomposing total variance into between- and within-country components"
   )
 
-ggsave("results/fig4b_variance_decomposition.pdf", fig4b, width = 12, height = 8)
-ggsave("results/fig4b_variance_decomposition.emf", fig4b, width = 12, height = 8, device = devEMF::emf)
-cat("Saved: results/fig4b_variance_decomposition\n")
+ggsave("results/fig6_variance_decomposition.pdf", fig6, width = 12, height = 8)
+ggsave("results/fig6_variance_decomposition.emf", fig6, width = 12, height = 8, device = devEMF::emf)
+cat("Saved: results/fig6_variance_decomposition\n")
 
 
 # =============================================================================
-# 5. FIGURE 5: HEATMAP OF SD BY COUNTRY × COHORT
+# 5. FIGURE 7: HEATMAP OF SD BY COUNTRY × COHORT
 #
 # Fill colour = SD of age difference; missing cells (< 100 obs) are left blank.
 # Countries sorted by overall mean SD (largest at top).
@@ -266,13 +266,13 @@ hm_data <- hm_data[n_cell >= 100]
 country_order <- hm_data[, .(overall_sd = mean(sd_gap)), by = country_name][order(-overall_sd)]
 hm_data[, country_name := factor(country_name, levels = rev(country_order$country_name))]
 
-fig5 <- ggplot(hm_data, aes(x = factor(cohort_start), y = country_name, fill = sd_gap)) +
+fig7 <- ggplot(hm_data, aes(x = factor(cohort_start), y = country_name, fill = sd_gap)) +
   geom_tile(color = "white", linewidth = 0.3) +
   scale_fill_viridis_c(option = "D", name = "SD (years)", na.value = "grey90") +
   labs(
     x       = "Birth cohort",
     y       = NULL,
-    title   = "Figure 5: Dispersion of age gap by country and birth cohort",
+    title   = "Figure 7: Dispersion of age gap by country and birth cohort",
     caption = "Fill = SD of age difference (years); missing = fewer than 100 obs"
   ) +
   theme(
@@ -280,13 +280,13 @@ fig5 <- ggplot(hm_data, aes(x = factor(cohort_start), y = country_name, fill = s
     axis.text.y = element_text(size = 7)
   )
 
-ggsave("results/fig5_heatmap_sd.pdf", fig5, width = 10, height = 12)
-ggsave("results/fig5_heatmap_sd.emf", fig5, width = 10, height = 12, device = devEMF::emf)
-cat("Saved: results/fig5_heatmap_sd\n")
+ggsave("results/fig7_heatmap_sd.pdf", fig7, width = 10, height = 12)
+ggsave("results/fig7_heatmap_sd.emf", fig7, width = 10, height = 12, device = devEMF::emf)
+cat("Saved: results/fig7_heatmap_sd\n")
 
 
 # =============================================================================
-# 6. FIGURE 5b: SHARE OF COUPLES WHERE WIFE IS OLDER BY COUNTRY × COHORT
+# 6. FIGURE 8: SHARE OF COUPLES WHERE WIFE IS OLDER BY COUNTRY × COHORT
 #
 # Two-panel figure:
 #   Panel A — Heatmap of % wife older by country × cohort (like Figure 5)
@@ -305,7 +305,7 @@ wo_cc <- wo_cc[n_cell >= 100]
 wo_country_order <- wo_cc[, .(overall_pct = mean(pct_wife_older)), by = country_name][order(-overall_pct)]
 wo_cc[, country_name_ord := factor(country_name, levels = rev(wo_country_order$country_name))]
 
-p5b_a <- ggplot(wo_cc, aes(x = factor(cohort_start), y = country_name_ord, fill = pct_wife_older)) +
+p8a <- ggplot(wo_cc, aes(x = factor(cohort_start), y = country_name_ord, fill = pct_wife_older)) +
   geom_tile(color = "white", linewidth = 0.3) +
   scale_fill_viridis_c(option = "B", name = "% wife older", na.value = "grey90") +
   labs(
@@ -322,7 +322,7 @@ p5b_a <- ggplot(wo_cc, aes(x = factor(cohort_start), y = country_name_ord, fill 
 # Overall trend
 wo_overall <- df[, .(pct_wife_older = mean(wife_older) * 100), by = cohort_start]
 
-p5b_b <- ggplot(wo_cc, aes(x = cohort_start, y = pct_wife_older, group = country_name)) +
+p8b <- ggplot(wo_cc, aes(x = cohort_start, y = pct_wife_older, group = country_name)) +
   geom_line(color = "grey75", linewidth = 0.3) +
   geom_line(data = wo_overall, aes(group = 1), color = "firebrick", linewidth = 1) +
   geom_point(data = wo_overall, aes(group = 1), color = "firebrick", size = 2) +
@@ -336,13 +336,13 @@ p5b_b <- ggplot(wo_cc, aes(x = cohort_start, y = pct_wife_older, group = country
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 # ---- Combine panels ----------------------------------------------------------
-fig5b <- (p5b_a | p5b_b) +
+fig8 <- (p8a | p8b) +
   plot_layout(widths = c(2, 1)) +
   plot_annotation(
-    title   = "Figure 5b: Share of couples where wife is older across countries and birth cohorts",
+    title   = "Figure 8: Share of couples where wife is older across countries and birth cohorts",
     caption = "Left: heatmap (cells with < 100 obs excluded); Right: grey = individual countries, red = overall"
   )
 
-ggsave("results/fig5b_wife_older.pdf", fig5b, width = 16, height = 12)
-ggsave("results/fig5b_wife_older.emf", fig5b, width = 16, height = 12, device = devEMF::emf)
-cat("Saved: results/fig5b_wife_older\n")
+ggsave("results/fig8_wife_older.pdf", fig8, width = 16, height = 12)
+ggsave("results/fig8_wife_older.emf", fig8, width = 16, height = 12, device = devEMF::emf)
+cat("Saved: results/fig8_wife_older\n")

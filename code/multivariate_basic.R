@@ -6,8 +6,8 @@
 ## Depends on: agediff_descriptive.R  (must be sourced first)
 ##
 ## Structure:
-##   5. Location-scale mixed models (M1–M4, model comparison)
-##   6. Model-based figures — cohort level (Figures 7–9)
+##   5. Location-scale mixed models (M1–M5, model comparison)
+##   6. Model-based figures — cohort level (Figures 11–13)
 ##
 ## Packages used (in addition to those loaded by agediff_descriptive.R):
 ##   nlme     — lme() and varIdent() for location-scale models
@@ -245,7 +245,7 @@ print(kable(aic_table, format = "simple"))
 # 6. MODEL-BASED FIGURES — COHORT LEVEL (Figures 7–9)
 # =============================================================================
 
-# ---- Figure 7: Residual SD by cohort from Model 2 ---------------------------
+# ---- Figure 11: Residual SD by cohort from Model 2 --------------------------
 # In Model 2, the varIdent structure estimates one SD multiplier per cohort
 # relative to the reference cohort (whose multiplier is fixed at 1).
 # The base residual SD (sigma) is the reference cohort's SD.
@@ -285,7 +285,7 @@ cohort_sd_df$cohort <- factor(cohort_sd_df$cohort, levels = all_cohorts)
 cat("\n===== Estimated residual SD per cohort (Model 2) =====\n")
 print(kable(cohort_sd_df, format = "simple", digits = 3))
 
-fig7 <- ggplot(cohort_sd_df, aes(
+fig11 <- ggplot(cohort_sd_df, aes(
   x     = cohort,                                   # cohort on x-axis
   y     = resid_sd,                                 # estimated SD on y-axis
   group = 1                                         # single connected line
@@ -295,17 +295,17 @@ fig7 <- ggplot(cohort_sd_df, aes(
   labs(
     x     = "Birth cohort",
     y     = "Estimated residual SD (years)",
-    title = "Figure 7: Model-estimated age-gap dispersion by cohort",
+    title = "Figure 11: Model-estimated age-gap dispersion by cohort",
     subtitle = "From location-scale model (nlme with varIdent)"
   ) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-ggsave("results/fig7_predicted_sd_cohort.pdf", fig7, width = 8, height = 5)
-ggsave("results/fig7_predicted_sd_cohort.emf", fig7, width = 8, height = 5, device = devEMF::emf)
-ggsave("results/fig7_predicted_sd_cohort.png", fig7, width = 8, height = 5, dpi = 300)
-cat("Saved: results/fig7_predicted_sd_cohort\n")
+ggsave("results/fig11_predicted_sd_cohort.pdf", fig11, width = 8, height = 5)
+ggsave("results/fig11_predicted_sd_cohort.emf", fig11, width = 8, height = 5, device = devEMF::emf)
+ggsave("results/fig11_predicted_sd_cohort.png", fig11, width = 8, height = 5, dpi = 300)
+cat("Saved: results/fig11_predicted_sd_cohort\n")
 
-# ---- Figure 8: Predicted mean age gap by cohort from Model 2 ----------------
+# ---- Figure 12: Predicted mean age gap by cohort from Model 2 ---------------
 # The fixed-effect coefficients give the predicted mean at each cohort level.
 # The intercept is the mean for the reference cohort; the other coefficients
 # are DIFFERENCES from that reference.
@@ -329,7 +329,7 @@ newdata_cohort$mu_hat <- predict(
   level     = 0                                     # population-average (fixed only)
 )
 
-fig8 <- ggplot(newdata_cohort, aes(
+fig12 <- ggplot(newdata_cohort, aes(
   x     = cohort_f,                                 # cohort on x-axis
   y     = mu_hat,                                   # predicted mean on y-axis
   group = 1
@@ -342,17 +342,17 @@ fig8 <- ggplot(newdata_cohort, aes(
   labs(
     x     = "Birth cohort",
     y     = "Predicted mean age gap (years)",
-    title = "Figure 8: Model-predicted mean age gap by cohort",
+    title = "Figure 12: Model-predicted mean age gap by cohort",
     subtitle = "Population-average prediction (country random effects = 0)"
   ) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-ggsave("results/fig8_predicted_mean_cohort.pdf", fig8, width = 8, height = 5)
-ggsave("results/fig8_predicted_mean_cohort.emf", fig8, width = 8, height = 5, device = devEMF::emf)
-ggsave("results/fig8_predicted_mean_cohort.png", fig8, width = 8, height = 5, dpi = 300)
-cat("Saved: results/fig8_predicted_mean_cohort\n")
+ggsave("results/fig12_predicted_mean_cohort.pdf", fig12, width = 8, height = 5)
+ggsave("results/fig12_predicted_mean_cohort.emf", fig12, width = 8, height = 5, device = devEMF::emf)
+ggsave("results/fig12_predicted_mean_cohort.png", fig12, width = 8, height = 5, dpi = 300)
+cat("Saved: results/fig12_predicted_mean_cohort\n")
 
-# ---- Figure 9: Model-implied density curves by cohort -----------------------
+# ---- Figure 13: Model-implied density curves by cohort ----------------------
 # This is the KEY RESULTS FIGURE. Instead of an abstract mean±SD ribbon,
 # we draw the actual normal density curves implied by the location-scale model
 # for each cohort. This makes the distributional shift vivid: the reader can
@@ -389,7 +389,7 @@ model_densities <- do.call(rbind, lapply(1:nrow(combined_pred), function(i) {
 model_densities$cohort_f <- factor(model_densities$cohort_f, levels = model_cohorts)
 
 # Panel A: stacked model-implied densities — the core visual
-fig9a <- ggplot(model_densities, aes(
+fig13a <- ggplot(model_densities, aes(
   x     = x,                                        # age gap on x-axis
   y     = density,                                  # density on y-axis
   fill  = cohort_f,                                 # color per cohort
@@ -411,7 +411,7 @@ fig9a <- ggplot(model_densities, aes(
 # Panel B: the same data shown as a ridgeline — another way to see the shift
 # Trick: use the pre-computed densities to draw ridgelines manually.
 # This avoids re-estimating and gives the model-implied shape.
-fig9b <- ggplot(combined_pred, aes(
+fig13b <- ggplot(combined_pred, aes(
   x     = cohort_f,
   group = 1
 )) +
@@ -433,14 +433,14 @@ fig9b <- ggplot(combined_pred, aes(
   ) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-fig9 <- fig9a + fig9b +
+fig13 <- fig13a + fig13b +
   plot_layout(widths = c(2, 1)) +                    # density panel wider
   plot_annotation(
-    title    = "Figure 9: Location-scale model \u2014 how the full distribution shifts across cohorts",
+    title    = "Figure 13: Location-scale model \u2014 how the full distribution shifts across cohorts",
     subtitle = "Left: model-implied normal densities; Right: predicted mean with \u00b11 and \u00b12 SD bands"
   )
 
-ggsave("results/fig9_model_implied_densities.pdf", fig9, width = 15, height = 6)
-ggsave("results/fig9_model_implied_densities.emf", fig9, width = 15, height = 6, device = devEMF::emf)
-ggsave("results/fig9_model_implied_densities.png", fig9, width = 15, height = 6, dpi = 300)
-cat("Saved: results/fig9_model_implied_densities\n")
+ggsave("results/fig13_model_implied_densities.pdf", fig13, width = 15, height = 6)
+ggsave("results/fig13_model_implied_densities.emf", fig13, width = 15, height = 6, device = devEMF::emf)
+ggsave("results/fig13_model_implied_densities.png", fig13, width = 15, height = 6, dpi = 300)
+cat("Saved: results/fig13_model_implied_densities\n")

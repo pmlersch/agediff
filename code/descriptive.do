@@ -224,7 +224,7 @@ preserve
 restore
 
 
-* ---- Figure 4: Mean and SD of age gap over birth cohorts --------------------
+* ---- Figure 5: Mean and SD of age gap over birth cohorts --------------------
 * Two-panel figure: left = mean, right = SD. Individual country lines in grey;
 * overall trend in bold colour.
 
@@ -271,8 +271,8 @@ preserve
         xtitle("Birth cohort") ytitle("Mean age gap (husband - wife)")             ///
         xlabel(1920(10)1980, angle(45) labsize(small))                   ///
         title("A: Mean") legend(off)                                      ///
-        name(fig4a_mean, replace)
-    graph save "fig4a_mean_tmp.gph", replace
+        name(fig5a_mean, replace)
+    graph save "fig5a_mean_tmp.gph", replace
 
     * Panel B: SD
     twoway `cmd_sd'                                                        ///
@@ -280,22 +280,22 @@ preserve
         xtitle("Birth cohort") ytitle("SD of age gap (husband - wife)")            ///
         xlabel(1920(10)1980, angle(45) labsize(small))                   ///
         title("B: Standard deviation") legend(off)                        ///
-        name(fig4b_sd, replace)
-    graph save "fig4b_sd_tmp.gph", replace
+        name(fig5b_sd, replace)
+    graph save "fig5b_sd_tmp.gph", replace
 
-    graph combine "fig4a_mean_tmp.gph" "fig4b_sd_tmp.gph", cols(2)        ///
-        title("Figure 4: Mean and dispersion of age gap across birth cohorts") ///
+    graph combine "fig5a_mean_tmp.gph" "fig5b_sd_tmp.gph", cols(2)        ///
+        title("Figure 5: Mean and dispersion of age gap across birth cohorts") ///
         note("Grey lines = individual countries; coloured line = overall trend") ///
-        name(fig4_combined, replace)
-    graph export "results/fig4_cohort_mean_sd.emf",      replace
-    graph export "results/fig4_cohort_mean_sd.pdf",      replace
+        name(fig5_combined, replace)
+    graph export "results/fig5_cohort_mean_sd.emf",      replace
+    graph export "results/fig5_cohort_mean_sd.pdf",      replace
 
-    erase "fig4a_mean_tmp.gph"
-    erase "fig4b_sd_tmp.gph"
+    erase "fig5a_mean_tmp.gph"
+    erase "fig5b_sd_tmp.gph"
 restore
 
 
-* ---- Figure 6: Scatter — mean vs. SD for the most recent cohort -------------
+* ---- Figure 9: Scatter — mean vs. SD for the most recent cohort -------------
 * Each point is one country; line = OLS trend.
 preserve
     * Identify the latest cohort group with at least 500 observations
@@ -320,14 +320,14 @@ preserve
             lcolor(firebrick) lwidth(thin)),                               ///
         xtitle("Mean age gap (years)")                                     ///
         ytitle("SD of age gap (years)")                                    ///
-        title("Figure 6: Mean vs. dispersion of age gaps (`latest_lbl' cohort)") ///
+        title("Figure 9: Mean vs. dispersion of age gaps (`latest_lbl' cohort)") ///
         legend(off)                                                        ///
-        name(fig6_mean_vs_sd, replace)
-    graph export "results/fig6_mean_vs_sd.emf",  replace
-    graph export "results/fig6_mean_vs_sd.pdf",  replace
+        name(fig9_mean_vs_sd, replace)
+    graph export "results/fig9_mean_vs_sd.emf",  replace
+    graph export "results/fig9_mean_vs_sd.pdf",  replace
 restore
 
-* ---- Figure 7: Mean & SD of age gap by country ----------------------------
+* ---- Figure 10: Mean & SD of age gap by country ----------------------------
 * Each country: dot at mean and SD
 * Complements Figure 2 (median [IQR]) using moment-based statistics.
 preserve
@@ -337,12 +337,12 @@ preserve
     sort mean_gap
     gen country_n = _n
 
-    capture label drop cntry7_lbl
+    capture label drop cntry10_lbl
     forvalues i = 1/`=_N' {
         local clab = country_name[`i']
-        label define cntry7_lbl `i' "`clab'", modify
+        label define cntry10_lbl `i' "`clab'", modify
     }
-    label values country_n cntry7_lbl
+    label values country_n cntry10_lbl
 
     local ncnt = _N
     twoway                                                                  ///
@@ -351,10 +351,10 @@ preserve
         ylabel(1(1)`ncnt', valuelabel labsize(half_tiny) angle(0))                        ///
         ytitle("") xtitle("Age difference (husband-wife)")  ///
         legend(order(1 "Mean" 2 "SD"))                                                        ///
-        title("Figure 7: Mean and dispersion of age gap by country")       ///
-        name(fig7_mean_sd_country, replace)
-    graph export "results/fig7_mean_sd_country.pdf", replace
-    graph export "results/fig7_mean_sd_country.emf", replace
+        title("Figure 10: Mean and dispersion of age gap by country")       ///
+        name(fig10_mean_sd_country, replace)
+    graph export "results/fig10_mean_sd_country.pdf", replace
+    graph export "results/fig10_mean_sd_country.emf", replace
 restore
 
 *last line

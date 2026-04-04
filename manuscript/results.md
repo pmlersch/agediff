@@ -14,12 +14,11 @@ The analysis runs in the following order (see `code/main.do`):
 
 1. **Data harmonisation** — `get_dhs.do`, `get_ess.do`, `get_ipums.do`, `get_issp.do`  
 2. **Merging** — `merge_data.do` → `data/harmonized/harmonized.dta` and `.rds`  
-3. **Descriptive statistics (Stata)** — `code/descriptive.do` → Tables 1–6, Figures 1, 2, 4, 6, 7  
-4. **Descriptive statistics (R)** — `code/descriptive.R` → Figures 3, 3b, 4b, 5, 5b  
-5. **Basic multivariate models (R)** — `code/multivariate_basic.R` → Models M1–M4, Figures 8–10  
-6. **Advanced country-level analysis (R)** — `code/multivariate_advanced.R` → Figures 11–14b, Diagnostics D1–D9
+3. **Descriptive statistics (Stata)** — `code/descriptive.do` → Tables 1–6, Figures 1, 2, 5, 9, 10  
+4. **Descriptive statistics (R)** — `code/descriptive.R` → Figures 3, 4, 6, 7, 8  
+5. **Basic multivariate models (R)** — `code/multivariate_basic.R` → Models M1–M5, Figures 11–13  
+6. **Advanced country-level analysis (R)** — `code/multivariate_advanced.R` → Figures 14–19, Diagnostics D1–D9
 
-> **Note on file naming:** The R scripts save model figures with prefixes `fig7`–`fig13` (e.g., `fig7_predicted_sd_cohort.pdf`). In this guide, those same files are numbered **Figures 8–14b** to avoid a collision with the descriptive Figure 7 (`fig7_mean_sd_country.pdf`) produced by `code/descriptive.do`. The file names on disk are unchanged.  
 
 The core outcome variable is `age_diff = husband's age − wife's age` (in whole years). Positive values mean the husband is older; negative values mean the wife is older; zero means they are the same age.
 
@@ -141,7 +140,7 @@ All tables are saved as Markdown files in `results/` and can be read directly in
 
 ## Part 2: Figures — Descriptive
 
-All figures are saved as both `.pdf` (for publication) and `.emf` (Enhanced Metafile, for editing in Word/PowerPoint) in `results/`. Produced by `code/descriptive.do` (Figures 1, 2, 4, 6, 7) and `code/descriptive.R` (Figures 3, 3b, 4b, 5, 5b).
+All figures are saved as both `.pdf` (for publication) and `.emf` (Enhanced Metafile, for editing in Word/PowerPoint) in `results/`. Produced by `code/descriptive.do` (Figures 1, 2, 5, 9, 10) and `code/descriptive.R` (Figures 3, 4, 6, 7, 8).
 
 ---
 
@@ -200,7 +199,7 @@ All figures are saved as both `.pdf` (for publication) and `.emf` (Enhanced Meta
 
 ---
 
-### Figure 3b — Ridgeline Density by Birth Cohort (`results/fig3b_ridgeline_cohort.pdf`)
+### Figure 4 — Ridgeline Density by Birth Cohort (`results/fig4_ridgeline_cohort.pdf`)
 
 **What it shows:** The same ridgeline format as Figure 3, but each ridge is one 10-year birth cohort (1920–1929 at the bottom, 1980–1989 at the top).
 
@@ -218,7 +217,7 @@ All figures are saved as both `.pdf` (for publication) and `.emf` (Enhanced Meta
 
 ---
 
-### Figure 4 — Mean and SD of Age Gap over Birth Cohorts (`results/fig4_cohort_mean_sd.pdf`)
+### Figure 5 — Mean and SD of Age Gap over Birth Cohorts (`results/fig5_cohort_mean_sd.pdf`)
 
 **What it shows:** A two-panel figure. Panel A (left) plots the mean age gap against birth cohort; Panel B (right) plots the standard deviation against birth cohort. Both panels show thin grey lines for individual countries and a bold coloured line for the overall pooled trend.
 
@@ -236,7 +235,7 @@ All figures are saved as both `.pdf` (for publication) and `.emf` (Enhanced Meta
 
 ---
 
-### Figure 4b — Variance Decomposition over Cohorts (`results/fig4b_variance_decomposition.pdf`)
+### Figure 6 — Variance Decomposition over Cohorts (`results/fig6_variance_decomposition.pdf`)
 
 **What it shows:** A four-panel figure:
 - **Panel A (Variance decomposition):** Stacked bar chart. Each bar represents one birth cohort. The dark blue segment shows within-country variance; the dark red segment shows between-country variance.
@@ -258,7 +257,7 @@ All figures are saved as both `.pdf` (for publication) and `.emf` (Enhanced Meta
 
 ---
 
-### Figure 5 — Heatmap of SD by Country × Cohort (`results/fig5_heatmap_sd.pdf`)
+### Figure 7 — Heatmap of SD by Country × Cohort (`results/fig7_heatmap_sd.pdf`)
 
 **What it shows:** A grid with countries on the y-axis (sorted by overall mean SD, highest at top) and birth cohorts on the x-axis. Each cell is filled with a colour representing the standard deviation of `age_diff` in that country-cohort cell. Missing cells (< 100 observations) are grey.
 
@@ -271,13 +270,13 @@ All figures are saved as both `.pdf` (for publication) and `.emf` (Enhanced Meta
 - A row that stays consistently dark indicates that high dispersion persists across all generations in that country.
 - A row with many grey (missing) cells indicates a country with limited data coverage.
 
-**What to look out for:** Look for whether countries at the top of the y-axis (highest-SD countries) are consistently dark across all cohort columns or only in certain cohorts. Look for regional patterns if you can mentally group countries. Check whether the heatmap supports the global trend in Figure 4b Panel D — if Figure 4b Panel D shows a decline in within-country SD over cohorts, you would expect cells to become lighter from left to right in most rows.
+**What to look out for:** Look for whether countries at the top of the y-axis (highest-SD countries) are consistently dark across all cohort columns or only in certain cohorts. Look for regional patterns if you can mentally group countries. Check whether the heatmap supports the global trend in Figure 6 Panel D — if Figure 6 Panel D shows a decline in within-country SD over cohorts, you would expect cells to become lighter from left to right in most rows.
 
 **Example interpretation:** If a country row in Figure 5 shows cells going from dark blue (SD ≈ 9) in the 1930s to light yellow (SD ≈ 5) in the 1970s, that country has experienced a substantial reduction in age-gap dispersion over generations. If another country's row shows consistently medium-dark colour across all cohorts, its dispersion has remained stable.
 
 ---
 
-### Figure 5b — Share of Couples Where Wife Is Older (`results/fig5b_wife_older.pdf`)
+### Figure 8 — Share of Couples Where Wife Is Older (`results/fig8_wife_older.pdf`)
 
 **What it shows:** A two-panel figure.
 - **Panel A (Heatmap):** Same grid structure as Figure 5 but the fill represents the percentage of couples where the wife is older (i.e., `age_diff < 0`).
@@ -297,7 +296,7 @@ All figures are saved as both `.pdf` (for publication) and `.emf` (Enhanced Meta
 
 ---
 
-### Figure 6 — Mean vs. SD Scatter (`results/fig6_mean_vs_sd.pdf`)
+### Figure 9 — Mean vs. SD Scatter (`results/fig9_mean_vs_sd.pdf`)
 
 **What it shows:** A scatter plot where each point is one country. The x-axis shows the mean age gap and the y-axis shows the SD of the age gap, both for the most recent birth cohort with sufficient data. Country names are printed next to their dots. A linear regression line (OLS) is shown in red.
 
@@ -309,13 +308,13 @@ All figures are saved as both `.pdf` (for publication) and `.emf` (Enhanced Meta
 - The slope of the red regression line tells you the direction of the correlation. A positive slope means higher-gap countries tend to also be more dispersed; a negative slope would mean higher-gap countries are more uniform.
 - The spread of points around the regression line tells you how consistent this relationship is.
 
-**What to look out for:** Points far from the regression line are interesting outliers — countries where mean and variance do not move together as expected. Check whether a specific region or data source systematically clusters in a particular area of the plot. Because this plot uses only the most recent cohort, the pattern may differ from earlier cohorts. The figure should be compared with Figure 13 (which uses a model-based approach on the same question).
+**What to look out for:** Points far from the regression line are interesting outliers — countries where mean and variance do not move together as expected. Check whether a specific region or data source systematically clusters in a particular area of the plot. Because this plot uses only the most recent cohort, the pattern may differ from earlier cohorts. The figure should be compared with Figure 16 (which uses a model-based approach on the same question).
 
 **Example interpretation:** If the regression line has a positive slope and most African countries cluster in the upper-right while most European countries cluster in the lower-left, this would indicate that cross-national differences in mean age gap and in age-gap dispersion are positively correlated — countries with larger gaps also have more diverse couple formations.
 
 ---
 
-### Figure 7 — Mean and SD by Country (Dot Plot) (`results/fig7_mean_sd_country.pdf`)
+### Figure 10 — Mean and SD by Country (Dot Plot) (`results/fig10_mean_sd_country.pdf`)
 
 **What it shows:** For each country (sorted by mean), two dots are shown: one for the mean age gap (one colour) and one for the SD (another colour). Countries are listed on the y-axis.
 
@@ -326,7 +325,7 @@ All figures are saved as both `.pdf` (for publication) and `.emf` (Enhanced Meta
 - Countries are sorted by mean: moving from bottom to top, the mean increases. Check whether the SD dots also increase, decrease, or fluctuate as you move up the y-axis.
 - Countries where the SD dot is far to the right of most others at the same mean level have unusually high dispersion.
 
-**What to look out for:** Check whether mean and SD are correlated across countries (both increasing together or both staying stable). See Figure 6 for a formal scatter plot of this relationship. Note that this figure uses pooled data across all cohorts, so country-level estimates reflect the entire historical record, not just recent generations.
+**What to look out for:** Check whether mean and SD are correlated across countries (both increasing together or both staying stable). See Figure 9 for a formal scatter plot of this relationship. Note that this figure uses pooled data across all cohorts, so country-level estimates reflect the entire historical record, not just recent generations.
 
 **Example interpretation:** If most countries cluster such that both mean and SD dots lie between 2 and 6 years, but a few countries have both dots beyond 10 years, this highlights a set of outlier countries with qualitatively different age-pairing patterns.
 
@@ -369,7 +368,7 @@ All models use a 10 % random subsample (~40,000 observations) for computational 
 **How to read the output:**
 - **`VarIdent` coefficients:** These are multiplicative scaling factors for the residual SD relative to the reference cohort. A factor of 1.20 means the residual SD in that cohort is 1.20 × the reference cohort's SD — 20 % more dispersed.
 - **`m2_var_cohort$sigma`:** The base residual SD, corresponding to the reference cohort.
-- **To compute the actual SD per cohort:** multiply `sigma` by the `VarIdent` multiplier for each cohort. The resulting values are plotted in Figure 8 (`results/fig7_predicted_sd_cohort.pdf`).
+- **To compute the actual SD per cohort:** multiply `sigma` by the `VarIdent` multiplier for each cohort. The resulting values are plotted in Figure 11 (`results/fig11_predicted_sd_cohort.pdf`).
 
 **What to look out for:** Check whether the multipliers are close to 1.0 (meaning variance does not differ much across cohorts, and M2 adds little over M1) or whether they vary substantially. If the multiplier is consistently above or below 1.0 for earlier versus later cohorts, there is a systematic trend in dispersion.
 
@@ -384,7 +383,7 @@ All models use a 10 % random subsample (~40,000 observations) for computational 
 **How to read the output:**
 - **`VarIdent` coefficients:** Multiplicative factors for the residual SD relative to the reference country.
 - **`m3_var_country$sigma`:** The base residual SD for the reference country.
-- **To compute SD per country:** multiply `sigma` by each country's factor. These are plotted in Figure 11 (`results/fig10_country_sigma_re.pdf`).
+- **To compute SD per country:** multiply `sigma` by each country's factor. These are plotted in Figure 14 (`results/fig14_country_sigma_re.pdf`).
 
 **What to look out for:** Countries whose factor is much greater than 1 have unusually wide distributions (high dispersion). Countries whose factor is much less than 1 have unusually narrow distributions. A very wide spread in the `VarIdent` factors means substantial cross-national differences in age-gap norms.
 
@@ -434,11 +433,11 @@ All models use a 10 % random subsample (~40,000 observations) for computational 
 
 ## Part 4: Model-Based Figures
 
-These figures visualise quantities extracted from the fitted models. They translate model coefficients into readily interpretable graphics. Produced by `code/multivariate_basic.R` (Figures 8–10) and `code/multivariate_advanced.R` (Figures 11–14b).
+These figures visualise quantities extracted from the fitted models. They translate model coefficients into readily interpretable graphics. Produced by `code/multivariate_basic.R` (Figures 11–13) and `code/multivariate_advanced.R` (Figures 14–19).
 
 ---
 
-### Figure 8 — Model-Estimated Age-Gap Dispersion by Cohort (`results/fig7_predicted_sd_cohort.pdf`)
+### Figure 11 — Model-Estimated Age-Gap Dispersion by Cohort (`results/fig11_predicted_sd_cohort.pdf`)
 
 **What it shows:** A line chart. The x-axis is birth cohort; the y-axis is the model-estimated residual SD from M2. Each point represents the estimated within-cohort standard deviation after controlling for country.
 
@@ -446,28 +445,28 @@ These figures visualise quantities extracted from the fitted models. They transl
 
 **How to interpret:** The y-value for a given cohort is the model's estimate of the typical within-country SD for that cohort. A declining line means later-born cohorts have less dispersed age-gap distributions (tighter norms); a rising line means increasing diversity; a U-shape would indicate a non-monotonic generational trend.
 
-**What to look out for:** Compare this figure with the raw SD trends in Figure 4b Panel D. Discrepancies between the two indicate that some of the raw trend in Figure 4 was attributable to changing country composition across cohorts (e.g., more high-SD developing countries in older cohorts), while Figure 8 controls for country.
+**What to look out for:** Compare this figure with the raw SD trends in Figure 6 Panel D. Discrepancies between the two indicate that some of the raw trend in Figure 5 was attributable to changing country composition across cohorts (e.g., more high-SD developing countries in older cohorts), while Figure 11 controls for country.
 
-**Example interpretation:** If the line in Figure 8 shows a modest U-shape — declining from the 1920s to the 1950s and then rising again for the 1970s–1980s — this would suggest that after controlling for country, dispersion was lower in mid-century cohorts, potentially reflecting a period of stronger normative consensus, before loosening in more recent generations.
+**Example interpretation:** If the line in Figure 11 shows a modest U-shape — declining from the 1920s to the 1950s and then rising again for the 1970s–1980s — this would suggest that after controlling for country, dispersion was lower in mid-century cohorts, potentially reflecting a period of stronger normative consensus, before loosening in more recent generations.
 
 ---
 
-### Figure 9 — Model-Predicted Mean Age Gap by Cohort (`results/fig8_predicted_mean_cohort.pdf`)
+### Figure 12 — Model-Predicted Mean Age Gap by Cohort (`results/fig12_predicted_mean_cohort.pdf`)
 
 **What it shows:** A line chart. The x-axis is birth cohort; the y-axis is the population-average predicted mean age gap from M2 (fixed effects only, country random effects set to zero).
 
 **Purpose:** To visualise the cohort trend in the mean age gap as estimated by the mixed model, representing the "average country."
 
-**How to interpret:** This is the model-based equivalent of the bold line in Figure 4 Panel A, but derived from the regression coefficients rather than simple averages. A positive slope means the mean gap is increasing over cohorts (averaged across countries); a negative slope means it is declining. Because random effects are zeroed out, this line represents a hypothetical average country, not any specific country.
+**How to interpret:** This is the model-based equivalent of the bold line in Figure 5 Panel A, but derived from the regression coefficients rather than simple averages. A positive slope means the mean gap is increasing over cohorts (averaged across countries); a negative slope means it is declining. Because random effects are zeroed out, this line represents a hypothetical average country, not any specific country.
 
 **What to look out for:** Compare this line with the simple means in Table 3. If both tell the same story, the model fit is consistent with the raw data. Differences indicate that country composition or weighting affects the raw cohort trend. The reference level on the y-axis is the predicted mean for the reference birth cohort.
 
 ---
 
-### Figure 10 — Location-Scale Model-Implied Distributions by Cohort (`results/fig9_model_implied_densities.pdf`)
+### Figure 13 — Location-Scale Model-Implied Distributions by Cohort (`results/fig13_model_implied_densities.pdf`)
 
-**What it shows:** A two-panel figure combining the mean (from Figure 9) and the SD (from Figure 8):
-- **Panel A (Density curves):** For each cohort, a normal distribution curve is drawn using the model-predicted mean (Figure 9) and the model-predicted SD (Figure 8). Curves are colour-coded by cohort and overlaid on the same axis.
+**What it shows:** A two-panel figure combining the mean (from Figure 12) and the SD (from Figure 11):
+- **Panel A (Density curves):** For each cohort, a normal distribution curve is drawn using the model-predicted mean (Figure 12) and the model-predicted SD (Figure 11). Curves are colour-coded by cohort and overlaid on the same axis.
 - **Panel B (Mean ± SD ribbon):** A line plot of the predicted mean with shaded bands at ±1 and ±2 SD around it, across cohorts.
 
 **Purpose:** This is the key results figure for the modelling section. It makes the full distributional shift across cohorts vivid and tangible — the reader can see simultaneously how the peak (location) and width (scale) of the distribution change across generations.
@@ -483,7 +482,7 @@ These figures visualise quantities extracted from the fitted models. They transl
 
 ---
 
-### Figure 11 — Country-Level Residual SD from M3 (`results/fig10_country_sigma_re.pdf`)
+### Figure 14 — Country-Level Residual SD from M3 (`results/fig14_country_sigma_re.pdf`)
 
 **What it shows:** A dot plot (caterpillar layout) with one dot per country. Countries are sorted on the y-axis from lowest (bottom) to highest (top) estimated residual SD. The x-axis shows the estimated residual SD from M3 (the model that allows variance to differ by country).
 
@@ -491,11 +490,11 @@ These figures visualise quantities extracted from the fitted models. They transl
 
 **How to interpret:** Countries at the top have the most dispersed age-gap distributions (weak norms; couples vary widely). Countries at the bottom have the most concentrated distributions (strong norms; couples cluster tightly). The value on the x-axis is the estimated standard deviation of `age_diff` for that country after controlling for cohort.
 
-**What to look out for:** Compare with the raw SD in Table 2 and Figure 5. The model-based estimates in Figure 11 control for cohort composition; raw estimates in Table 2 do not. Large discrepancies between a country's rank in Figure 11 and its rank in Table 2 indicate that cohort composition is confounding the raw estimate. Note that model estimates are derived from a 40,000-observation subsample; for countries with very few observations in the subsample, estimates may be imprecise.
+**What to look out for:** Compare with the raw SD in Table 2 and Figure 7. The model-based estimates in Figure 14 control for cohort composition; raw estimates in Table 2 do not. Large discrepancies between a country's rank in Figure 14 and its rank in Table 2 indicate that cohort composition is confounding the raw estimate. Note that model estimates are derived from a 40,000-observation subsample; for countries with very few observations in the subsample, estimates may be imprecise.
 
 ---
 
-### Figure 12 — Country Random Intercepts (`results/fig11_country_mu_re.pdf`)
+### Figure 15 — Country Random Intercepts (`results/fig15_country_mu_re.pdf`)
 
 **What it shows:** A dot plot with one dot per country, sorted by the size of the random intercept. The x-axis shows the estimated country-level deviation from the overall mean age gap (i.e., the BLUP — Best Linear Unbiased Prediction). A dashed vertical line marks zero.
 
@@ -506,15 +505,15 @@ These figures visualise quantities extracted from the fitted models. They transl
 - A dot to the left of zero means the country's mean gap is below average.
 - Countries with dots far from zero are outliers in mean gap level.
 
-**What to look out for:** The random intercepts sum to approximately zero across all countries (by the random effects constraint). Countries with very large positive or negative random intercepts are the main drivers of cross-national variation in the mean. Check whether countries with large positive intercepts (high mean) also have large residual SDs (Figure 11) or vice versa — this is directly examined in Figure 13.
+**What to look out for:** The random intercepts sum to approximately zero across all countries (by the random effects constraint). Countries with very large positive or negative random intercepts are the main drivers of cross-national variation in the mean. Check whether countries with large positive intercepts (high mean) also have large residual SDs (Figure 14) or vice versa — this is directly examined in Figure 16.
 
 ---
 
-### Figure 13 — Relationship between Mean and Variance across Countries (`results/fig12_mean_vs_variance_re.pdf`)
+### Figure 16 — Relationship between Mean and Variance across Countries (`results/fig16_mean_vs_variance_re.pdf`)
 
-**What it shows:** A scatter plot. The x-axis is the country random intercept (mean deviation, from Figure 12); the y-axis is the country-specific residual SD (from Figure 11). Each dot is a country, labelled. A linear regression line with 95 % confidence interval is shown.
+**What it shows:** A scatter plot. The x-axis is the country random intercept (mean deviation, from Figure 15); the y-axis is the country-specific residual SD (from Figure 14). Each dot is a country, labelled. A linear regression line with 95 % confidence interval is shown.
 
-**Purpose:** To directly examine whether countries with larger-than-average mean age gaps also tend to be more or less dispersed. This is the model-based version of Figure 6.
+**Purpose:** To directly examine whether countries with larger-than-average mean age gaps also tend to be more or less dispersed. This is the model-based version of Figure 9.
 
 **How to interpret:**
 - A positive slope means high-mean-gap countries also have high within-country dispersion.
@@ -525,11 +524,11 @@ These figures visualise quantities extracted from the fitted models. They transl
 
 ---
 
-### Figure 14 — Full Distribution Evolution for Selected Countries (`results/fig13_country_density_evolution.pdf`)
+### Figure 17 — Full Distribution Evolution for Selected Countries (`results/fig17_country_density_evolution.pdf`)
 
 **What it shows:** A faceted figure with eight panels, one per selected country (Sweden, Germany, United States, Brazil, India, Egypt, Nigeria, Mali). Within each panel, one density curve per birth cohort is overlaid. Curves are colour-coded by cohort.
 
-**Purpose:** To show the full distributional change — not just a summary statistic — within specific countries across generations. This is the country-level analogue of Figure 10.
+**Purpose:** To show the full distributional change — not just a summary statistic — within specific countries across generations. This is the country-level analogue of Figure 13.
 
 **How to interpret:**
 - Within each panel, if successive cohort curves shift leftward and narrow, that country's couples are forming partnerships with smaller, more homogeneous age gaps in younger generations.
@@ -542,7 +541,7 @@ These figures visualise quantities extracted from the fitted models. They transl
 
 ---
 
-### Figure 14b — SD Trends for Selected Countries (`results/fig13b_country_sd_trends.pdf`)
+### Figure 18 — SD Trends for Selected Countries (`results/fig18_country_sd_trends.pdf`)
 
 **What it shows:** A line chart. The x-axis is birth cohort; the y-axis is the observed standard deviation of `age_diff`. Each country is shown as a separate coloured line.
 
@@ -554,7 +553,7 @@ These figures visualise quantities extracted from the fitted models. They transl
 - Lines crossing each other indicate that countries are changing at different rates.
 - A country whose line starts high (large SD in old cohorts) but falls sharply is converging rapidly toward lower dispersion.
 
-**What to look out for:** Compare the ordering of countries by SD level in Figure 14b with their ordering by mean in Figure 13. Check whether the country with the most rapid decline in SD is among those with the largest initial gap.
+**What to look out for:** Compare the ordering of countries by SD level in Figure 18 with their ordering by mean in Figure 17. Check whether the country with the most rapid decline in SD is among those with the largest initial gap.
 
 ---
 
@@ -678,35 +677,35 @@ Beyond the figures, three numeric tables are printed to the console during execu
 
 ## Quick Reference: Which File Produces Which Output
 
-| Output | Produced by |
-|--------|------------|
-| Table 1 (overall) | `code/descriptive.do` |
-| Table 2 (by country) | `code/descriptive.do` |
-| Table 3 (by cohort) | `code/descriptive.do` |
-| Table 4 (mean, country × cohort) | `code/descriptive.do` |
-| Table 5 (SD, country × cohort) | `code/descriptive.do` |
-| Table 6 (N, country × year) | `code/descriptive.do` |
-| Figure 1 (histogram) | `code/descriptive.do` |
-| Figure 2 (caterpillar, median/IQR) | `code/descriptive.do` |
-| Figure 3 (ridgeline, by country) | `code/descriptive.R` |
-| Figure 3b (ridgeline, by cohort) | `code/descriptive.R` |
-| Figure 4 (mean and SD, cohort trends) | `code/descriptive.do` |
-| Figure 4b (variance decomposition) | `code/descriptive.R` |
-| Figure 5 (heatmap, SD) | `code/descriptive.R` |
-| Figure 5b (heatmap, wife older) | `code/descriptive.R` |
-| Figure 6 (mean vs. SD scatter) | `code/descriptive.do` |
-| Figure 7 (mean and SD, by country) | `code/descriptive.do` |
-| Figure 8 (model SD by cohort) | `code/multivariate_basic.R` |
-| Figure 9 (model mean by cohort) | `code/multivariate_basic.R` |
-| Figure 10 (model-implied densities) | `code/multivariate_basic.R` |
-| Figure 11 (country-level sigma) | `code/multivariate_advanced.R` |
-| Figure 12 (country random intercepts) | `code/multivariate_advanced.R` |
-| Figure 13 (mean vs. variance, RE) | `code/multivariate_advanced.R` |
-| Figure 14 (country density evolution) | `code/multivariate_advanced.R` |
-| Figure 14b (country SD trends) | `code/multivariate_advanced.R` |
-| Diagnostics D1–D4 | `code/multivariate_advanced.R` |
-| Diagnostics D5–D9 | `code/multivariate_advanced.R` |
-| Models M1–M4, AIC table, LRT | `code/multivariate_basic.R` |
+| Output | Produced by | File prefix |
+|--------|------------|-------------|
+| Table 1 (overall) | `code/descriptive.do` | `table1_overall` |
+| Table 2 (by country) | `code/descriptive.do` | `table2_by_country` |
+| Table 3 (by cohort) | `code/descriptive.do` | `table3_by_cohort` |
+| Table 4 (mean, country × cohort) | `code/descriptive.do` | `table4_mean_by_country_cohort` |
+| Table 5 (SD, country × cohort) | `code/descriptive.do` | `table5_sd_by_country_cohort` |
+| Table 6 (N, country × year) | `code/descriptive.do` | `table6_n_by_country_year` |
+| Figure 1 (histogram) | `code/descriptive.do` | `fig1_histogram` |
+| Figure 2 (caterpillar, median/IQR) | `code/descriptive.do` | `fig2_caterpillar` |
+| Figure 3 (ridgeline, by country) | `code/descriptive.R` | `fig3_ridgeline` |
+| Figure 4 (ridgeline, by cohort) | `code/descriptive.R` | `fig4_ridgeline_cohort` |
+| Figure 5 (mean and SD, cohort trends) | `code/descriptive.do` | `fig5_cohort_mean_sd` |
+| Figure 6 (variance decomposition) | `code/descriptive.R` | `fig6_variance_decomposition` |
+| Figure 7 (heatmap, SD) | `code/descriptive.R` | `fig7_heatmap_sd` |
+| Figure 8 (wife older, heatmap + trends) | `code/descriptive.R` | `fig8_wife_older` |
+| Figure 9 (mean vs. SD scatter) | `code/descriptive.do` | `fig9_mean_vs_sd` |
+| Figure 10 (mean and SD, by country) | `code/descriptive.do` | `fig10_mean_sd_country` |
+| Figure 11 (model SD by cohort) | `code/multivariate_basic.R` | `fig11_predicted_sd_cohort` |
+| Figure 12 (model mean by cohort) | `code/multivariate_basic.R` | `fig12_predicted_mean_cohort` |
+| Figure 13 (model-implied densities) | `code/multivariate_basic.R` | `fig13_model_implied_densities` |
+| Figure 14 (country-level sigma) | `code/multivariate_advanced.R` | `fig14_country_sigma_re` |
+| Figure 15 (country random intercepts) | `code/multivariate_advanced.R` | `fig15_country_mu_re` |
+| Figure 16 (mean vs. variance, RE) | `code/multivariate_advanced.R` | `fig16_mean_vs_variance_re` |
+| Figure 17 (country density evolution) | `code/multivariate_advanced.R` | `fig17_country_density_evolution` |
+| Figure 18 (country SD trends) | `code/multivariate_advanced.R` | `fig18_country_sd_trends` |
+| Figure 19 (country × cohort variance) | `code/multivariate_advanced.R` | `fig19_country_cohort_variance` |
+| Diagnostics D1–D9 | `code/multivariate_advanced.R` | `figD1`–`figD9` |
+| Models M1–M5, AIC table, LRT | `code/multivariate_basic.R` | — |
 
 ---
 
