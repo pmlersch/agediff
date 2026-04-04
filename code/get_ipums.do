@@ -41,7 +41,6 @@ replace marital_status = "married"       if marst == 2
 replace marital_status = "separated"     if marst == 3
 replace marital_status = "widowed"       if marst == 4
 
-
 * country (ISO 3166-1 numeric → ISO2c)
 * kountry requires a numeric variable; keep string copy only for manual overrides
 tostring country, gen(_ctry_str) format(%03.0f) force
@@ -72,6 +71,7 @@ replace weight = perwt
 * source tag
 gen source = "ipums"
 
+* keep only harmonized columns and drop partner-less rows
 keep year sex sex_partner birth_cohort marital_status age age_partner ///
      country_iso country_name weight source
 drop if missing(age_partner)

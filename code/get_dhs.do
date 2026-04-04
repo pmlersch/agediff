@@ -70,6 +70,7 @@ if !_rc {
 * source tag
 gen source = "dhs"
 
+* keep only harmonized columns and drop partner-less rows
 keep year sex sex_partner birth_cohort marital_status age age_partner ///
      country_iso country_name weight source
 drop if missing(age_partner)
