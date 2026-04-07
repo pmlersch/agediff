@@ -50,7 +50,7 @@ Pooling these without source-level fixed effects or weights in the descriptive t
 The code uses `n_cell >= 100` as a filter throughout (descriptive.R line 163; descriptive.do passim). However:
 
 - The comment in descriptive.R line 160 says "min 30 obs per cell" but the actual code uses 100. This discrepancy suggests the threshold was changed without updating documentation.
-- 100 observations is adequate for estimating a mean but not for estimating a standard deviation or the shape of a density reliably, especially in the tails. For the heatmap of SD (Figure 5), cells with exactly 100 obs will have noisy SD estimates that could dominate the visual.
+- 100 observations is adequate for estimating a mean but not for estimating a standard deviation or the shape of a density reliably, especially in the tails. For the heatmap of SD (Figure 7), cells with exactly 100 obs will have noisy SD estimates that could dominate the visual.
 - The threshold is applied at the country x cohort level but not at the country level overall. Countries with total N < 1,000 (Japan: 652, Kosovo: 695, South Korea: 697) remain in the pooled statistics and potentially in the models.
 
 ### 2.3 No survey weights
@@ -91,7 +91,7 @@ The entire modelling framework assumes that, conditional on cohort and country, 
 - **Age heaping:** Spikes at 0, 5, 10 years violate continuity assumptions.
 - **Potential multimodality:** Some country distributions may be bimodal.
 
-Figure 9 then draws "model-implied normal density curves" as the key results figure. If the underlying distribution is not normal, these curves are misleading --- they will understate the probability mass in the tails and at the heaping points, and overstate it near the mean. The model diagnostics section (Section 7 of multivariate_advanced.R) checks residual normality, but the results are not discussed or used to qualify the model-implied density figures.
+Figure 13 then draws "model-implied normal density curves" as the key results figure. If the underlying distribution is not normal, these curves are misleading --- they will understate the probability mass in the tails and at the heaping points, and overstate it near the mean. The model diagnostics section (Section 7 of multivariate_advanced.R) checks residual normality, but the results are not discussed or used to qualify the model-implied density figures.
 
 A more robust approach would use a distributional regression framework (e.g., GAMLSS) that can accommodate skewness and kurtosis, or at minimum present the model-implied densities alongside the empirical densities for validation.
 

@@ -6,7 +6,7 @@
 ## Depends on: agediff_basic_multivariate.R  (which sources agediff_descriptive.R)
 ##
 ## Structure:
-##   6. Model-based figures — country level (Figures 10–13b)
+##   6. Model-based figures — country level (Figures 14–19)
 ##   7. Model diagnostics (Figures D1–D9 and numeric summaries)
 ##   Summary of all key outputs
 ##
@@ -27,10 +27,10 @@ library(knitr)        # provides kable() for formatted table output
 
 
 # =============================================================================
-# 6. MODEL-BASED FIGURES — COUNTRY LEVEL (Figures 10–13b)
+# 6. MODEL-BASED FIGURES — COUNTRY LEVEL (Figures 14–19)
 # =============================================================================
 
-# ---- Figure 10: Country-level residual SD from Model 3 ----------------------
+# ---- Figure 14: Country-level residual SD from Model 3 ----------------------
 # Model 3 estimated a separate residual SD for each country.
 # We extract these to see which countries have the widest/narrowest distributions.
 
@@ -66,7 +66,7 @@ print(kable(
   format = "simple", digits = 3, row.names = FALSE
 ))
 
-fig10 <- ggplot(country_sd_df, aes(
+fig14 <- ggplot(country_sd_df, aes(
   x = resid_sd,                                     # estimated SD on x-axis
   y = country                                       # country on y-axis (sorted)
 )) +
@@ -74,16 +74,16 @@ fig10 <- ggplot(country_sd_df, aes(
   labs(
     x     = "Estimated residual SD of age gap (years)",
     y     = NULL,
-    title = "Figure 10: Country-level age-gap dispersion",
+    title = "Figure 14: Country-level age-gap dispersion",
     subtitle = "From location-scale model with country-specific variance"
   )
 
-ggsave("results/fig10_country_sigma_re.pdf", fig10, width = 8, height = 10)
-ggsave("results/fig10_country_sigma_re.emf", fig10, width = 8, height = 10, device = devEMF::emf)
-ggsave("results/fig10_country_sigma_re.png", fig10, width = 8, height = 10, dpi = 300)
-cat("Saved: results/fig10_country_sigma_re\n")
+ggsave("results/fig14_country_sigma_re.pdf", fig14, width = 8, height = 10)
+ggsave("results/fig14_country_sigma_re.emf", fig14, width = 8, height = 10, device = devEMF::emf)
+ggsave("results/fig14_country_sigma_re.png", fig14, width = 8, height = 10, dpi = 300)
+cat("Saved: results/fig14_country_sigma_re\n")
 
-# ---- Figure 11: Country random intercepts (mean deviations) -----------------
+# ---- Figure 15: Country random intercepts (mean deviations) -----------------
 # The random intercepts from Model 3 show how each country's MEAN age gap
 # deviates from the overall (fixed-effect) mean.
 
@@ -101,7 +101,7 @@ mu_re_df <- data.frame(
 mu_re_df <- mu_re_df %>%
   mutate(country = fct_reorder(country, re_mu))
 
-fig11 <- ggplot(mu_re_df, aes(
+fig15 <- ggplot(mu_re_df, aes(
   x = re_mu,                                        # random intercept on x-axis
   y = country                                       # country on y-axis (sorted)
 )) +
@@ -112,16 +112,16 @@ fig11 <- ggplot(mu_re_df, aes(
   labs(
     x     = "Country deviation from overall mean (years)",
     y     = NULL,
-    title = "Figure 11: Country random intercepts — deviation in mean age gap",
+    title = "Figure 15: Country random intercepts — deviation in mean age gap",
     subtitle = "Positive = larger-than-average age gap; negative = smaller"
   )
 
-ggsave("results/fig11_country_mu_re.pdf", fig11, width = 8, height = 10)
-ggsave("results/fig11_country_mu_re.emf", fig11, width = 8, height = 10, device = devEMF::emf)
-ggsave("results/fig11_country_mu_re.png", fig11, width = 8, height = 10, dpi = 300)
-cat("Saved: results/fig11_country_mu_re\n")
+ggsave("results/fig15_country_mu_re.pdf", fig15, width = 8, height = 10)
+ggsave("results/fig15_country_mu_re.emf", fig15, width = 8, height = 10, device = devEMF::emf)
+ggsave("results/fig15_country_mu_re.png", fig15, width = 8, height = 10, dpi = 300)
+cat("Saved: results/fig15_country_mu_re\n")
 
-# ---- Figure 12: Mean RE vs. variance — do they go together? -----------------
+# ---- Figure 16: Mean RE vs. variance — do they go together? -----------------
 # Key theoretical question: do countries with larger mean age gaps also have
 # more or less dispersion? We plot country random intercepts (mean) against
 # country-specific residual SDs (variance).
@@ -133,7 +133,7 @@ re_combined <- merge(
   by = "country"
 )
 
-fig12 <- ggplot(re_combined, aes(
+fig16 <- ggplot(re_combined, aes(
   x     = re_mu,                                    # mean deviation (x)
   y     = resid_sd,                                 # residual SD (y)
   label = country                                   # text label
@@ -154,16 +154,16 @@ fig12 <- ggplot(re_combined, aes(
   labs(
     x     = "Country deviation in mean age gap (years)",
     y     = "Country-specific residual SD (years)",
-    title = "Figure 12: Relationship between mean and variance across countries",
+    title = "Figure 16: Relationship between mean and variance across countries",
     subtitle = "Does a larger mean gap coincide with more or less dispersion?"
   )
 
-ggsave("results/fig12_mean_vs_variance_re.pdf", fig12, width = 9, height = 7)
-ggsave("results/fig12_mean_vs_variance_re.emf", fig12, width = 9, height = 7, device = devEMF::emf)
-ggsave("results/fig12_mean_vs_variance_re.png", fig12, width = 9, height = 7, dpi = 300)
-cat("Saved: results/fig12_mean_vs_variance_re\n")
+ggsave("results/fig16_mean_vs_variance_re.pdf", fig16, width = 9, height = 7)
+ggsave("results/fig16_mean_vs_variance_re.emf", fig16, width = 9, height = 7, device = devEMF::emf)
+ggsave("results/fig16_mean_vs_variance_re.png", fig16, width = 9, height = 7, dpi = 300)
+cat("Saved: results/fig16_mean_vs_variance_re\n")
 
-# ---- Figure 13: Full distribution evolution for selected countries -----------
+# ---- Figure 17: Full distribution evolution for selected countries -----------
 # Instead of just showing SD trends (a summary), we show the FULL density
 # curves evolving across cohorts within each country. This is the most
 # compelling way to see distributional change at the country level.
@@ -180,7 +180,7 @@ spotlight_dens[, country := factor(country,
   levels = c("Sweden", "Germany", "United States", "Brazil",
              "India", "Egypt", "Nigeria", "Mali"))]
 
-fig13 <- ggplot(spotlight_dens, aes(
+fig17 <- ggplot(spotlight_dens, aes(
   x     = age_diff,                                 # age gap on x-axis
   fill  = cohort_group,                             # one color per cohort
   color = cohort_group                              # matching border color
@@ -193,24 +193,24 @@ fig13 <- ggplot(spotlight_dens, aes(
   labs(
     x     = "Age difference (husband \u2212 wife, years)",
     y     = "Density",
-    title = "Figure 13: How age-gap distributions evolve within countries",
+    title = "Figure 17: How age-gap distributions evolve within countries",
     subtitle = "Each colored density is one birth cohort; panels ordered by mean age gap"
   ) +
   theme(legend.position = "bottom")                  # legend at bottom to save space
 
-ggsave("results/fig13_country_density_evolution.pdf", fig13, width = 12, height = 14)
-ggsave("results/fig13_country_density_evolution.emf", fig13, width = 12, height = 14, device = devEMF::emf)
-ggsave("results/fig13_country_density_evolution.png", fig13, width = 12, height = 14, dpi = 300)
-cat("Saved: results/fig13_country_density_evolution\n")
+ggsave("results/fig17_country_density_evolution.pdf", fig17, width = 12, height = 14)
+ggsave("results/fig17_country_density_evolution.emf", fig17, width = 12, height = 14, device = devEMF::emf)
+ggsave("results/fig17_country_density_evolution.png", fig17, width = 12, height = 14, dpi = 300)
+cat("Saved: results/fig17_country_density_evolution\n")
 
-# ---- Figure 13b: SD trends for selected countries (supplement) ---------------
+# ---- Figure 18: SD trends for selected countries (supplement) ----------------
 # Keep the SD trend lines as a compact supplement to the density panels.
 spotlight_sd <- df[country %in% spotlight &
                      cohort_group %in% names(which(table(df$cohort_group) >= 500)),
                    .(SD = sd(age_diff)),
                    by = .(country, cohort_group)]
 
-fig13b <- ggplot(spotlight_sd, aes(
+fig18 <- ggplot(spotlight_sd, aes(
   x     = cohort_group,                             # cohort on x-axis
   y     = SD,                                       # observed SD on y-axis
   color = country,                                  # one color per country
@@ -222,16 +222,16 @@ fig13b <- ggplot(spotlight_sd, aes(
     x     = "Birth cohort",
     y     = "SD of age gap (years)",
     color = "Country",
-    title = "Figure 13b: Age-gap dispersion trends for selected countries"
+    title = "Figure 18: Age-gap dispersion trends for selected countries"
   ) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-ggsave("results/fig13b_country_sd_trends.pdf", fig13b, width = 10, height = 6)
-ggsave("results/fig13b_country_sd_trends.emf", fig13b, width = 10, height = 6, device = devEMF::emf)
-ggsave("results/fig13b_country_sd_trends.png", fig13b, width = 10, height = 6, dpi = 300)
-cat("Saved: results/fig13b_country_sd_trends\n")
+ggsave("results/fig18_country_sd_trends.pdf", fig18, width = 10, height = 6)
+ggsave("results/fig18_country_sd_trends.emf", fig18, width = 10, height = 6, device = devEMF::emf)
+ggsave("results/fig18_country_sd_trends.png", fig18, width = 10, height = 6, dpi = 300)
+cat("Saved: results/fig18_country_sd_trends\n")
 
-# ---- Figure 14: Country × cohort variance decomposition (Model 5) -----------
+# ---- Figure 19: Country × cohort variance decomposition (Model 5) -----------
 # Model 5 (crossed varIdent) estimates a separate residual SD for every
 # country × cohort cell.  A heatmap of these cell-specific SDs is the most
 # direct visualisation of the paper's central claim: if normativity is
@@ -283,7 +283,7 @@ print(kable(
   row.names = FALSE
 ))
 
-fig14 <- ggplot(cell_sd_df, aes(
+fig19 <- ggplot(cell_sd_df, aes(
   x    = cohort,                                    # cohort on x-axis
   y    = country,                                   # country on y-axis (sorted by mean SD)
   fill = resid_sd                                   # estimated SD determines colour
@@ -297,7 +297,7 @@ fig14 <- ggplot(cell_sd_df, aes(
   labs(
     x     = "Birth cohort",
     y     = NULL,
-    title = "Figure 14: Country \u00d7 cohort variance decomposition (Model 5)",
+    title = "Figure 19: Country \u00d7 cohort variance decomposition (Model 5)",
     subtitle = paste0(
       "Estimated residual SD per cell from crossed varIdent model.\n",
       "Uniform decline across rows \u21d2 convergence is global; ",
@@ -309,12 +309,12 @@ fig14 <- ggplot(cell_sd_df, aes(
     axis.text.y = element_text(size = 6)
   )
 
-ggsave("results/fig14_country_cohort_variance.pdf", fig14, width = 10, height = 16)
-ggsave("results/fig14_country_cohort_variance.emf", fig14, width = 10, height = 16,
+ggsave("results/fig19_country_cohort_variance.pdf", fig19, width = 10, height = 16)
+ggsave("results/fig19_country_cohort_variance.emf", fig19, width = 10, height = 16,
        device = devEMF::emf)
-ggsave("results/fig14_country_cohort_variance.png", fig14, width = 10, height = 16,
+ggsave("results/fig19_country_cohort_variance.png", fig19, width = 10, height = 16,
        dpi = 300)
-cat("Saved: results/fig14_country_cohort_variance\n")
+cat("Saved: results/fig19_country_cohort_variance\n")
 
 
 # =============================================================================
@@ -684,24 +684,25 @@ cat("\n")
 cat("Tables printed to console (Tables 1–5)\n")
 cat("\n")
 cat("Figures saved to results/:\n")
-cat("  fig1_histogram.png               — Overall age-gap distribution\n")
-cat("  fig2_caterpillar.png             — Median + IQR by country\n")
-cat("  fig3_ridgeline.{pdf,emf,png}               — Full distributions by country\n")
-cat("  fig3b_ridgeline_cohort.{pdf,emf,png}       — Distributions evolving across cohorts\n")
-cat("  fig3c_ecdf_cohort.{emf,pdf}                — Overlaid ECDFs by cohort\n")
-cat("  fig4_cohort_mean_sd.{emf,pdf}              — Mean and SD across cohorts\n")
-cat("  fig4b_variance_decomposition.{pdf,emf,png} — Between/within variance + ICC\n")
-cat("  fig5_heatmap_sd.{pdf,emf,png}              — SD heatmap (country × cohort)\n")
-cat("  fig6_mean_vs_sd.{emf,pdf}                  — Mean vs SD scatter\n")
-cat("  fig7_predicted_sd_cohort.{pdf,emf,png}     — Model-estimated SD by cohort\n")
-cat("  fig8_predicted_mean_cohort.{pdf,emf,png}   — Model-predicted mean by cohort\n")
-cat("  fig9_model_implied_densities.{pdf,emf,png} — KEY: model-implied densities by cohort\n")
-cat("  fig10_country_sigma_re.{pdf,emf,png}       — Country residual SDs\n")
-cat("  fig11_country_mu_re.{pdf,emf,png}          — Country mean deviations\n")
-cat("  fig12_mean_vs_variance_re.{pdf,emf,png}    — Mean vs variance relationship\n")
-cat("  fig13_country_density_evolution.{pdf,emf,png} — Full density evolution, 8 countries\n")
-cat("  fig13b_country_sd_trends.{pdf,emf,png}     — SD trends for 8 countries\n")
-cat("  fig14_country_cohort_variance.{pdf,emf,png} — KEY: country × cohort SD heatmap (M5)\n")
+cat("  fig1_histogram.{emf,pdf}                     — Overall age-gap distribution\n")
+cat("  fig2_caterpillar.{emf,pdf}                   — Median + IQR by country\n")
+cat("  fig3_ridgeline.{pdf,emf}                     — Full distributions by country\n")
+cat("  fig4_ridgeline_cohort.{pdf,emf}              — Distributions evolving across cohorts\n")
+cat("  fig5_cohort_mean_sd.{emf,pdf}                — Mean and SD across cohorts\n")
+cat("  fig6_variance_decomposition.{pdf,emf}        — Between/within variance + ICC\n")
+cat("  fig7_heatmap_sd.{pdf,emf}                    — SD heatmap (country × cohort)\n")
+cat("  fig8_wife_older.{pdf,emf}                    — Share wife older (heatmap + trends)\n")
+cat("  fig9_mean_vs_sd.{emf,pdf}                    — Mean vs SD scatter\n")
+cat("  fig10_mean_sd_country.{emf,pdf}              — Mean & SD by country dot plot\n")
+cat("  fig11_predicted_sd_cohort.{pdf,emf,png}      — Model-estimated SD by cohort\n")
+cat("  fig12_predicted_mean_cohort.{pdf,emf,png}    — Model-predicted mean by cohort\n")
+cat("  fig13_model_implied_densities.{pdf,emf,png}  — KEY: model-implied densities by cohort\n")
+cat("  fig14_country_sigma_re.{pdf,emf,png}         — Country residual SDs\n")
+cat("  fig15_country_mu_re.{pdf,emf,png}            — Country mean deviations\n")
+cat("  fig16_mean_vs_variance_re.{pdf,emf,png}      — Mean vs variance relationship\n")
+cat("  fig17_country_density_evolution.{pdf,emf,png} — Full density evolution, 8 countries\n")
+cat("  fig18_country_sd_trends.{pdf,emf,png}         — SD trends for 8 countries\n")
+cat("  fig19_country_cohort_variance.{pdf,emf,png}   — KEY: country × cohort SD heatmap (M5)\n")
 cat("\n")
 cat("Diagnostics saved to results/:\n")
 cat("  figD1_resid_vs_fitted_m2.{pdf,emf,png} — Residuals vs fitted (M2)\n")
